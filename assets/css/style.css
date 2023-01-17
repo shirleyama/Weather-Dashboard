@@ -1,0 +1,127 @@
+/* VARIABLES */
+:root {
+  --blue: #048ba8;
+  --orange: #f18f01;
+}
+
+/* RESETS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+/* GLOBAL CLASSES */
+.text-center {
+  text-align: center;
+}
+
+.row,
+.column {
+  display: flex;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+/* CUSTOM STYLES */
+h1.main-header {
+  margin: 20px 0 25px;
+  color: var(--blue);
+}
+
+h2#form-heading {
+  margin-top: 30px !important;
+}
+input.search {
+  padding: 8px 15px;
+  width: 350px;
+  border-radius: 10px;
+  border: 1px solid var(--blue);
+  outline: none;
+  margin-bottom: 35px;
+  color: #555;
+}
+
+input.search::placeholder {
+  color: var(--blue);
+  text-align: center;
+}
+
+aside {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 15px;
+  padding: 0 3%;
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  padding: 0 3%;
+}
+.today-card {
+  margin: 30px 0;
+  padding: 15px 0 0 20px;
+  border: 1px solid var(--blue);
+  border-radius: 4px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+.forecast-card {
+  margin: 0px 15px 30px 15px;
+  padding: 15px 20px;
+  border: 0 solid var(--blue);
+  border-radius: 4px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+
+.forecast-card > *:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+p.no-search {
+  grid-column: 1 / 5;
+  color: var(--blue);
+}
+
+.forecast-card h3 {
+  font-size: 1rem;
+}
+.forecast-card p {
+  font-size: 0.9rem;
+}
+
+.forecast-card a {
+  color: var(--orange);
+  font-size: 0.8rem;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--orange);
+}
+
+/* MOBILE STYLES */
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
