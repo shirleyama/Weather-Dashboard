@@ -1,56 +1,10 @@
-/* 
-see script-wc.js for comments
-*/
 var searchInput = $(".weather-search");
 var button = $("#search-button");
 var todayWrapper = $("#today");
 var forecastWrapper = $("#forecast");
 var outputHistory = $("#history");
 var forecastHeading = $(".forecast-heading");
-/*
-function saveHistory(arr) {
-  localStorage.setItem("history", JSON.stringify(arr));
-}
-function getHistory() {
-  return JSON.parse(localStorage.getItem("todos")) || [];
-}
 
-function displayHistory() {
-  var todos = getHistory();
-
-  outputHistory.html('');
-
-  if (!history.length) {
-    outputHistory.html('<p>No todos have been added.</p>');
-  }
-
-  $.each(history, function (index, todo) {
-    outputHistory.prepend(`
-    <li>
-      <span>${history}</span>
-      <button data-index="${index}">Complete</button>
-    </li> 
-    `);
-  });
-}
-
-function addHistory(event) {
-  var keyPressed = event.keyCode;
-
-  if (keyPressed === 13) {
-    var history = gethistory ();
-    var historyText = city;//input.val();
-
-    if (!historyText) return;
-
-    history.push(historyText);
-    saveHistory(history);
-
-    input.val('');
-
-    displayHistory();
-  }
-}*/
 var apiKey = "f172d5b5834c972027f76cfbaf70c231";
 
 //var cityName = "London";
@@ -83,11 +37,12 @@ function inputSubmitted(cityName) {
     $.get(currentURL + `q=${cityName}`) // no ampersand as we've done this already on
       .then(function (currentData) {
         console.log(currentData); //main is one of the object
+        var date = moment.unix(currentData.dt).format("DD/MM/YYYY");
         todayWrapper.append(`
           <div class="today-card" style="color: #333;">
             <h2>${
               currentData.name
-            } (${currentData.dt}) <span><img src="${iconURL + currentData.weather[0].icon}.png"></span></h2>
+            } (${date}) <span><img src="${iconURL + currentData.weather[0].icon}.png"></span></h2>
             <p> Temp: ${Math.round(currentData.main.temp)}ºC</p>
             <p>Humidity: ${currentData.main.humidity}%</p>
             <p>Wind: ${currentData.wind.speed}m/s</p>
