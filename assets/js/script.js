@@ -57,12 +57,16 @@ function inputSubmitted(cityName) {
           .then(function (forecastData) {
             console.log(forecastData);
             forecastHeading.append(`
-                <row class="col-lg-12 pb-3"><div style="display:block"><h2>5 Day Forecast</h2>   </div>   </row>     
-`);
+              <row class="col-lg-12 pb-3">
+                <div style="display:block">
+                  <h2>5 Day Forecast</h2>  
+                </div>  
+               </row>     
+          `);
             for (var castObj of forecastData.list) {
               forecastWrapper.append(`
-                <div class="forecast-card"      style="background-color: #333;color: #fff;">
-                      <h3>${castObj.dt}</h3>
+                <div class="forecast-card" style="background-color: #333;color: #fff;">
+                <h3>${moment.unix(castObj.dt).format("DD/MM/YYYY")}</h3>    
                       <p><img src="${
                         iconURL + castObj.weather[0].icon
                       }.png"></p>
@@ -70,7 +74,7 @@ function inputSubmitted(cityName) {
                       <p>Humidity: ${castObj.main.humidity}%</p>
                       <p>Wind: ${castObj.wind.speed}m/s</p>   
                 </div>
-    `);
+             `);
             }
           });
       });
