@@ -20,7 +20,7 @@ To access the website click [Shirley Thompson's Weather Dashboard](https://shirl
 
 ## Usage
 
-![Weather Dashboard screenshot](assets/images/weather-dashboard-screenshot.png)
+![Weather Dashboard screenshot](assets/images/screenshot-weather-dashboard.jpg)
 
 ## Credits
 
