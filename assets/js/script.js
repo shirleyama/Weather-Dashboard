@@ -1,9 +1,19 @@
-var searchInput = $(".weather-search");
-var button = $("#search-button");
+// var searchInput = $(".weather-search");
+var searchInput = $(".form-input");
+var searchButton = $("#search-button");
+//jmbtrn = display-artist is today
 var todayWrapper = $("#today");
+
+//dspCrds = dsp songsdisplay forecast//forecast is songs/
 var forecastWrapper = $("#forecast");
-var outputHistory = $("#history");
+
 var forecastHeading = $(".forecast-heading");
+var localStorageArray = [];
+
+var searchHistorySection = $("#search-history");
+// var outputHistory = $("#history");
+
+var clearButton = $("#clear-button");
 
 var apiKey = "f172d5b5834c972027f76cfbaf70c231";
 
@@ -23,8 +33,9 @@ function inputSubmitted(cityName) {
   //grab value from user's inner press or from a form submission
   // Prevent the default behavior
   cityName.preventDefault();
-  var cityName = "";
-  todayWrapper.innerHTML = " ";
+  // var cityName = "";
+  //jumbtrn
+  todayWrapper.html("");
 
   // if (!matches.length) {
   //   noMatch();
@@ -38,6 +49,7 @@ function inputSubmitted(cityName) {
       .then(function (currentData) {
         console.log(currentData); //main is one of the object
         var date = moment.unix(currentData.dt).format("DD/MM/YYYY");
+        //jmbtrn
         todayWrapper.append(`
           <div class="today-card" style="color: #333;">
             <h2>${
@@ -48,7 +60,8 @@ function inputSubmitted(cityName) {
             <p>Wind: ${currentData.wind.speed}m/s</p>
           </div>
     `);
-
+        addToSearchHistory(cityName);
+        console.log("add to search", cityName);
         $.get(
           forecastURL +
             `lat=${currentData.coord.lat}&lon=${currentData.coord.lon}`
@@ -56,10 +69,13 @@ function inputSubmitted(cityName) {
 
           .then(function (forecastData) {
             console.log(forecastData);
+
+            // Clear the forecastWrapper element
+            forecastWrapper.html("");
             forecastHeading.append(`
               <row class="col-lg-12 pb-3">
                 <div style="display:block">
-                  <h2>5 Day Forecast</h2>  
+                  <h2>${cityName} 5 Day Forecast</h2>  
                 </div>  
                </row>     
           `);
@@ -80,11 +96,79 @@ function inputSubmitted(cityName) {
       });
   }
 }
+// Adding the option to clear search history
+function clearPreviousSearch() {
+  localStorage.removeItem("cityName");
+  searchHistorySection.empty();
+}
 
+function addToSearchHistory(cityName) {
+  var searchHistory = searchInput.val().toLowerCase().trim(); // Getting the searched city from the search input
+  console.log("cityName-addtosearchhistory", cityName);
+  if (searchHistory == "") {
+    return;
+  }
+
+  //If search input is already in the array, don't add again
+  //Without this we get duplicate results
+  if (localStorageArray.indexOf(searchHistory) > -1) {
+    return;
+  }
+  console.log("check if adding cityName", searchHistory);
+  // Checking to see if the searched artist is already stored in localStorage
+  // Object {Key: artist, Value: search input string}
+  if (localStorage.getItem("cityName") == null) {
+    localStorageArray.push(searchHistory); //pushing searched term into the array
+  } else {
+    localStorageArray = JSON.parse(localStorage.getItem("cityName"));
+
+    //Checking if keyword doesn't already exist in array, if not then pushing it through
+    if (localStorageArray.indexOf(searchHistory) === -1) {
+      localStorageArray.push(searchHistory);
+    }
+  }
+
+  //Adding the searched term as a button in search history
+  searchHistorySection.append(`
+    <button data-city="${cityName}" type="button" class="city-history btn btn-dark btn-block">${cityName}</button>
+    `);
+
+  //Stringifying searched terms array into a string
+  localStorage.setItem("cityName", JSON.stringify(localStorageArray));
+}
 //inputSubmitted(city);
+function getPreviouslySearchedTermsFromLocalStorage() {
+  //If statement to check whether array already exists in localStorage, if it does, then parse it back into an array
+  if (localStorage.getItem("cityName") != null) {
+    localStorageArray = JSON.parse(localStorage.getItem("cityName"));
+
+    //Using a for loop to add all previous searched terms as buttons
+    for (var i = 0; i < localStorageArray.length; i++) {
+      var location = localStorageArray[i];
+
+      searchHistorySection.append(`
+                <button data-artist="${location}" type="button" class="artist-history btn btn-dark btn-block">${location}</button>
+            `);
+    }
+  }
+}
+
+//Creating click event for all search history buttons inside #history div
+function recallCity() {
+  //repopulating searchInput using data-location attribute
+  var text = $(this).text();
+  //Removing and adding classes to change the highlighted button colours when selected
+  $(".city-history").removeClass("btn-info").addClass("btn-dark");
+  $(this).removeClass("btn-dark").addClass("btn-info");
+  inputSubmitted(text);
+}
 
 function init() {
-  button.click(inputSubmitted);
+  searchButton.click(inputSubmitted);
+  //   searchInput.keydown(inputSubmitted);
+  searchHistorySection.on("click", ".city-history", recallCity);
+  clearButton.click(clearPreviousSearch);
+  getPreviouslySearchedTermsFromLocalStorage();
 }
 
 init();
